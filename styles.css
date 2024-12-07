@@ -1,0 +1,127 @@
+/* Fondo general */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(108deg, #022036, #0d1117 50%);
+    color: #c9d1d9;
+    /* display: flex;
+    justify-content: center;
+    align-items: center; */
+    height: 100vh;
+    background-attachment: fixed;
+  }
+  
+  /* Contenedor principal */
+  .container {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  /* Caja del formulario */
+  .form-box {
+    background-color: #161b22;
+    border-radius: 8px;
+    padding: 30px;
+    width: 350px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    border: 1px solid #30363d;
+  }
+
+  .header-box {
+    background-color: #161b22;
+    border-radius: 8px;
+    padding: 30px;
+    width: 100%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    border: 1px solid #30363d;
+    align-items: start
+  }
+  
+  /* Título */
+  h1 {
+    font-size: 1.6em;
+    color: #c9d1d9;
+    margin-bottom: 10px;
+  }
+  
+  /* Subtítulo */
+  .subtitle {
+    color: #8b949e;
+    margin-bottom: 20px;
+  }
+  
+  /* Label con estilo resaltado */
+  label {
+    font-size: 1em;
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  .highlight {
+    color: #39d353; /* Verde */
+  }
+  
+  /* Campo de entrada */
+  input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #30363d;
+    border-radius: 4px;
+    background-color: #0d1117;
+    color: #c9d1d9;
+  }
+  
+  input:focus {
+    outline: 2px solid #58a6ff;
+  }
+  
+  /* Botón y flecha */
+  .button-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .arrow {
+    color: #f78166; /* Rosa */
+    font-size: 1.5em;
+    margin-right: 10px;
+  }
+  
+  button {
+    padding: 10px 20px;
+    background-color: #21262d;
+    border: 1px solid #30363d;
+    border-radius: 4px;
+    color: #c9d1d9;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #30363d;
+    color: #58a6ff;
+  }
+  
+  /* Texto de inicio de sesión */
+  .signin {
+    margin-top: 15px;
+    font-size: 0.9em;
+  }
+  
+  .signin a {
+    color: #58a6ff;
+    text-decoration: none;
+  }
+  
+  .signin a:hover {
+    text-decoration: underline;
+  }
+  
+  button:disabled {
+    background-color: #444;
+    cursor: not-allowed;
+}

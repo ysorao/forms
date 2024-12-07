@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "ldapjs": "^3.0.7",
+    "mssql": "^11.0.1"
+  }
+}

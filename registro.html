@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        
+       
+    </style>
+</head>
+<body>
+    <div class="header-box">
+        <h3>
+            Bienvenido: <span id="displayName" style="color: #39d353;"></span> - 
+            <span id="title" style="color: #58a6ff;"></span> 
+            (<span id="phone" style="color: #f78166;"></span>)
+        </h3>
+        
+
+        <!-- Tabla para mostrar los datos -->
+        
+
+        <!-- Botón de Logout -->
+        <button class="logout-button" id="logout-button">Cerrar sesión</button>
+    </div>
+
+    <script>
+        // Función para verificar el token y cargar los datos
+        async function verifyAccess() {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                alert("No tienes acceso. Por favor inicia sesión.");
+                window.location.href = "index.html"; // Redirige al login
+                return;
+            }
+    
+            try {
+                const response = await fetch("http://localhost:3000/registro", {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+    
+                if (response.status === 200) {
+                    const result = await response.json();
+                    const user = result.user.userData;
+    
+                    // Llenar los datos en la tabla
+                    document.getElementById("displayName").textContent = user.displayName || "N/A";
+                    document.getElementById("title").textContent = user.title || "N/A";
+                    document.getElementById("phone").textContent = user.phone || "N/A";
+                } else {
+                    alert("No tienes acceso. Por favor inicia sesión.");
+                    window.location.href = "index.html"; // Redirige al login
+                }
+            } catch (error) {
+                alert("Error al verificar el acceso. " + error.message);
+                window.location.href = "index.html"; // Redirige al login
+            }
+        }
+    
+        // Cerrar sesión (Logout) con confirmación
+        document.getElementById("logout-button").addEventListener("click", () => {
+            if (confirm("¿Estás seguro de que quieres cerrar sesión?")) {
+                localStorage.removeItem("token"); // Eliminar el token
+                window.location.href = "index.html"; // Redirigir al login
+            }
+        });
+    
+        // Verificar acceso al cargar la página
+        verifyAccess();
+    </script>
+</body>
+</html>

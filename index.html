@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HeOn Health Online</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="form-box">
+      <h1>HeOn Health Online</h1>
+      <p class="subtitle">Innovemos Juntos</p>
+      <form id="login-form">
+        <label for="email"><span class="highlight">Ingrese su usuario</span><span>*</span></label>
+        <input type="text" id="username" name="username" placeholder="Usuario HeOn" required Value="jsdeviag">
+        <label for="email"><span class="highlight">Password</span><span></span></label>
+        <input type="password" id="password" name="password" placeholder="Password" required value="IzamariaLuci0223">
+        <div class="button-container">
+          <span class="arrow">→</span>
+          <button type="submit">Continuar</button>
+        </div>
+      </form>
+    </div>
+   <!-- <p class="signin">Already have an account? <a href="#">Sign in →</a></p>-->
+   <script>
+    const form = document.getElementById("login-form");
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        try {
+            const response = await fetch("http://localhost:3000/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ username, password }),
+            });
+
+            const result = await response.json();
+            if (result.status) {
+                // Guardar el token en el localStorage
+                localStorage.setItem("token", result.token);
+
+                // Redirigir a la página de registro
+                window.location.href = "registro.html";
+            } else {
+                alert("Error: " + result.message);
+            }
+        } catch (error) {
+            alert("Error en la conexión al servidor: " + error.message);
+        }
+    });
+
+</script>
+  </div>
+</body>
+</html>
