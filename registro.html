@@ -180,11 +180,19 @@
                 if (response.status === 200) {
                     const result = await response.json();
                     const user = result.user.userData;
+                    // Almacenar los datos del usuario en una variable global
+                    currentUser = {
+                        name: user.displayName || "N/A",
+                        document: user.phone || "N/A",
+                        area: user.title || "N/A",
+                    };
     
                     // Llenar los datos en la tabla
                     document.getElementById("displayName").textContent = user.displayName || "N/A";
                     document.getElementById("title").textContent = user.title || "N/A";
                     document.getElementById("phone").textContent = user.phone || "N/A";
+                    // Añadir al usuario a la grilla como primer integrante
+                    addToGrid(currentUser.name, currentUser.document, currentUser.area, true);
                 } else {
                     alert("No tienes acceso. Por favor inicia sesión.");
                     window.location.href = "index.html"; // Redirige al login
@@ -439,7 +447,7 @@ window.addEventListener("click", (event) => {
 });
 
 
-
+//Capti
 
 
 
