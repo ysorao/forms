@@ -218,9 +218,9 @@ app.get("/test-access-data", verifyToken, async (req, res) => {
         const pool = await connectToDatabase();
 
         const query = `
-            SELECT NOMBRE + ' ' + APELLIDO AS NOMBRES, EMPLEADO, DPTO
+            SELECT TOP 10 NOMBRE + ' ' + APELLIDO AS NOMBRES, EMPLEADO, DPTO
             FROM [10.99.240.163].[HeonMidasoft].[dbo].[EMP]
-            WHERE (NOMBRE LIKE @search or EMPLEADO LIKE @search) AND ESTADO=''
+            WHERE (NOMBRE LIKE @search or APELLIDO LIKE @search OR EMPLEADO LIKE @search) AND ESTADO=''
         `;
 
         const result = await pool
@@ -240,6 +240,88 @@ app.get("/test-access-data", verifyToken, async (req, res) => {
         });
     }
 });
+
+app.post("/save-innovation-data", verifyToken, async (req, res) => {
+    const { projectName, members } = req.body;
+
+    if (!projectName || !Array.isArray(members) || members.length === 0) {
+        return res.status(400).json({
+            status: false,
+            message: "El nombre del proyecto y los integrantes son requeridos.",
+        });
+    }
+
+    try {
+        const pool = await connectToDatabase();
+
+        // Verificar si algún integrante ya está en otro proyecto
+        const documents = members.map((m) => `'${m.document}'`).join(","); // Crear una lista de documentos para la consulta
+        const checkQuery = `
+            SELECT documento
+            FROM InnovaIntegrantes
+            WHERE documento IN (${documents})
+        `;
+
+        const checkResult = await pool.request().query(checkQuery);
+
+        if (checkResult.recordset.length > 0) {
+            const existingDocuments = checkResult.recordset.map((row) => row.documento).join(", ");
+            return res.status(400).json({
+                status: false,
+                message: `Los siguientes documentos ya están asociados a otros proyectos: ${existingDocuments}`,
+            });
+        }
+
+        // Iniciar una transacción
+        const transaction = pool.transaction();
+        await transaction.begin();
+
+        // Insertar el proyecto
+        const projectResult = await transaction
+            .request()
+            .input("nombre", sql.VarChar, projectName)
+            .input("fecha", sql.DateTime, new Date())
+            .query(
+                "INSERT INTO innovaProyecto (nombre, fechaRegistro) OUTPUT INSERTED.id VALUES (@nombre, @fecha)"
+            );
+
+        const idProyecto = projectResult.recordset[0].id;
+
+        // Insertar los integrantes
+        const insertMembersQuery =
+            "INSERT INTO InnovaIntegrantes (idProyecto, Nombres, documento, area) VALUES (@idProyecto, @Nombres, @documento, @area)";
+
+        for (const member of members) {
+            await transaction
+                .request()
+                .input("idProyecto", sql.Int, idProyecto)
+                .input("Nombres", sql.VarChar, member.name)
+                .input("documento", sql.VarChar, member.document)
+                .input("area", sql.VarChar, member.area)
+                .query(insertMembersQuery);
+        }
+
+        // Confirmar la transacción
+        await transaction.commit();
+
+        res.json({
+            status: true,
+            message: "Datos almacenados exitosamente.",
+        });
+    } catch (error) {
+        console.error("Error al almacenar los datos:", error);
+
+        if (transaction) {
+            await transaction.rollback(); // Revertir en caso de error
+        }
+
+        res.status(500).json({
+            status: false,
+            message: "Error al guardar los datos: " + error.message,
+        });
+    }
+});
+
 
 
 

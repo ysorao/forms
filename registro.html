@@ -12,11 +12,94 @@
 </head>
 <body>
     <div class="header-box">
-        <h3>
+        <h3 class="card">
             Bienvenido: <span id="displayName" style="color: #39d353;"></span> - 
             <span id="title" style="color: #58a6ff;"></span> 
-            (<span id="phone" style="color: #f78166;"></span>)
+            (<span id="phone" style="color: #58a6ff;"></span>)
+            <br>
+            <button class="logout-button" id="logout-button">Cerrar sesión</button>
         </h3>
+        <!-- Botón de Logout -->
+        <button id="terms-button" style="margin-top: 20px;">Términos y Condiciones</button>
+        <button id="reglas-button" style="margin-top: 20px;">Reglas</button>
+        <button id="fases-button" style="margin-top: 20px;">Fases</button>
+
+        <div id="terms-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button" id="close-modal">&times;</span>
+                <h2>Términos y Condiciones</h2>
+                <p>HeOn Health On Line S.A. se reserva la facultad de ejecutar o no el proyecto ganador, sin perjuicio de que el ganador reciba el premio anunciado.</p>
+                <p>En caso de ejecutarse el proyecto, se reconocerán los derechos morales al autor o autores del proyecto.</p>
+                <p>Los derechos patrimoniales del proyecto pertenecerán a Heon Health On Line S.A.</p>
+                <p>La participación en el concurso no debe ser causal de abandono o descuido de las responsabilidades y obligaciones laborales pactadas con HeOn.</p>
+                <p>Todas las actividades relacionadas con el concurso en la primera fase deberán ejecutarse fuera de la jornada laboral, sin que esto entorpezca de ninguna manera la ejecución de sus funciones.</p>
+            </div>
+        </div>
+        <div id="reglas-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button" id="closeReglas-modal">&times;</span>
+
+                <h2>Reglas del concurso</h2>
+                <div class="modalcontent">
+                <p>¿Quiénes pueden participar?<br>
+                    Pueden participar los trabajadores de Heon. Únicamente Se excluyen miembros del comité Directivo, quienes serán parte del comité evaluador.</p>
+                <p>¿Cuántas propuestas puede presentar cada participante?<br>
+                    Cada participante o grupo de participantes podrá presentar una única propuesta (selecciona la mejor que tengas).</p>
+                <p>¿La participación es individual o en grupo?<br>
+                    Se pueden presentar de manera individual o en equipos de hasta 5 personas.<br>
+                    No se permiten cambios después de la inscripción (retirar, añadir o reemplazar integrantes). Si alguno de los integrantes se retira de la compañía, el equipo deberá continuar con los restantes.<br>
+                    Solo es posible pertenecer a un grupo.</p>
+                    </div>
+                
+            </div>
+        </div>
+        <div id="fases-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button" id="closefases-modal">&times;</span>
+                <h2>Fases del concurso</h2>
+                <div class="modalcontent">
+
+                
+                <h3>Fase 1</h3>
+                    <p>Cada participante o grupo realizará una presentación al comité evaluador de Heon de manera libre (Documento, Infografía, storyline, video, etc) que responda las siguientes preguntas:</p>
+                    
+                    ¿Qué problema o necesidad específica resuelve tu propuesta?<br>
+                    ¿Cuál es la causa raíz de este problema?<br>
+                    ¿A quién afecta este problema y de qué manera?<br>
+                    ¿En qué consiste tu solución innovadora?<br>
+                    ¿Qué hace única a tu solución en comparación con otras existentes?<br>
+                    ¿Por qué crees que HeOn la debe desarrollar?<br>
+                    <p>** Para esta fase solo se abordará el proyecto desde la Idea, no se requieren ni se recibirán prototipos o demostraciones de la aplicación o producto, el comité evaluador podrá realizar preguntas que permitan conocer temas relevantes para la calificación </p>
+
+                    <h3>Fase 2</h3>
+
+                    <p>Los participantes que lleguen a esta fase deberán complementar lo expuesto en la Fase 1, incluyendo en esta presentación los siguientes temas:</p>
+
+                    Prototipo.<br>
+                    Viabilidad técnica.<br>
+                    Viabilidad económica (costos).<br>
+                    Tecnologías para el desarrollo.<br>
+                    Cronograma (personas, procesos, tecnología)
+
+                </div>
+            </div>
+        </div>
+
+
+<!-- Modal de confirmación -->
+<div id="confirmation-modal" class="modal">
+    <div class="modal-content">
+        <h2>Confirmación</h2>
+        <p>Al Realizar la inscripcion todos los integrantes aceptan los Terminos y condiciones, las reglas, la politica de tratamiento de datos de HeOn</p>
+        <div style="margin-top: 20px;">
+            <button id="confirm-save" style="margin-right: 10px;">Aceptar</button>
+            <button id="cancel-save">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+
+<div class="cardproject">
 
         <div>
             <label for="project-name" style="display: block; margin-bottom: 10px;">Nombre del Proyecto:</label>
@@ -28,7 +111,27 @@
             />
         </div>
 
-
+     
+       
+        <h4>Mi equipo</h4>
+        <table id="selected-data-table" border="1" style="width: 90%; margin-top: 20px; text-align: center;">
+            <thead>
+                <tr>
+                    <th class="equipo" >NOMBRE</th>
+                    <th class="equipo">DOCUMENTO</th>
+                    <th class="equipo">ÁREA</th>
+                    <th class="equipo">Acciones</th> <!-- Columna para eliminar -->
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Los datos seleccionados se insertarán dinámicamente aquí -->
+            </tbody>
+        </table>
+        <button id="save-project-data" style="margin-top: 10px;">INSCRIBIRME</button>
+        
+</div>
+        
+        <h3>Selecciona los integrantes de tu equipo</h3>
         
         <div>
             <input
@@ -38,21 +141,6 @@
                 style="width: 90%; padding: 10px; margin-bottom: 20px;"
             />
         </div>
-        <h3>Listado seleccionado</h3>
-<table id="selected-data-table" border="1" style="width: 90%; margin-top: 20px; text-align: center;">
-    <thead>
-        <tr>
-            <th>NOMBRE</th>
-            <th>DOCUMENTO</th>
-            <th>ÁREA</th>
-            <th>Acciones</th> <!-- Columna para eliminar -->
-        </tr>
-    </thead>
-    <tbody>
-        <!-- Los datos seleccionados se insertarán dinámicamente aquí -->
-    </tbody>
-</table>
-
         <!-- Tabla para mostrar los datos -->
         <table id="access-data-table" border="1" style="width: 90%; margin-top: 20px; text-align: center;">
             <thead>
@@ -69,8 +157,7 @@
         </table>
         
 
-        <!-- Botón de Logout -->
-        <button class="logout-button" id="logout-button">Cerrar sesión</button>
+        
     </div>
 
     <script>
@@ -182,6 +269,12 @@
 function addToGrid(nombre, documento, area) {
     const tableBody = document.querySelector("#selected-data-table tbody");
 
+    // Limitar a 5 filas
+    if (tableBody.children.length >= 5) {
+        alert("No puedes agregar más de 5 integrantes.");
+        return;
+    }
+
     // Verificar si el documento ya está en la lista
     if (Array.from(tableBody.children).some(row => row.querySelector("td:nth-child(2)").textContent === documento)) {
         alert("Este documento ya está en el listado.");
@@ -203,6 +296,7 @@ function addToGrid(nombre, documento, area) {
     });
 }
 
+
 // Captura el valor del proyecto
 const projectInput = document.getElementById("project-name");
 
@@ -215,11 +309,147 @@ projectInput.addEventListener("input", () => {
     console.log("Nombre del proyecto actualizado:", getProjectName());
 });
 
+// Obtener los elementos del DOM
+const confirmationModal = document.getElementById("confirmation-modal");
+const confirmSaveButton = document.getElementById("confirm-save");
+const cancelSaveButton = document.getElementById("cancel-save");
+
+// Abrir el modal de confirmación
+document.getElementById("save-project-data").addEventListener("click", () => {
+    const projectName = getProjectName();
+    if (!projectName) {
+        alert("Por favor introduce un nombre para el proyecto.");
+        return;
+    }
+
+    const tableBody = document.querySelector("#selected-data-table tbody");
+    const members = Array.from(tableBody.children);
+
+    if (members.length === 0) {
+        alert("Por favor selecciona al menos un integrante.");
+        return;
+    }
+
+    // Mostrar el modal de confirmación
+    confirmationModal.style.display = "block";
+});
+
+// Manejar la confirmación de guardado
+confirmSaveButton.addEventListener("click", async () => {
+    confirmationModal.style.display = "none"; // Cerrar el modal
+    // Llama la función que guarda los datos
+    await saveProjectData();
+});
+
+// Cancelar la operación
+cancelSaveButton.addEventListener("click", () => {
+    confirmationModal.style.display = "none"; // Cerrar el modal
+});
+
+// Función para guardar los datos
+async function saveProjectData() {
+    const projectName = getProjectName();
+    const tableBody = document.querySelector("#selected-data-table tbody");
+    const members = Array.from(tableBody.children).map((row) => ({
+        name: row.querySelector("td:nth-child(1)").textContent,
+        document: row.querySelector("td:nth-child(2)").textContent,
+        area: row.querySelector("td:nth-child(3)").textContent,
+    }));
+
+    const token = localStorage.getItem("token");
+    try {
+        const response = await fetch("http://localhost:3000/save-innovation-data", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ projectName, members }),
+        });
+
+        const result = await response.json();
+        if (result.status) {
+            alert("Proyecto guardado exitosamente.");
+            // Limpiar campos
+            document.getElementById("project-name").value = "";
+            tableBody.innerHTML = "";
+        } else {
+            alert("Error: " + result.message);
+        }
+    } catch (error) {
+        console.error("Error al guardar los datos:", error.message);
+        alert("Error al conectarse al servidor: " + error.message);
+    }
+}
+
+
+//Modal term
+
+document.getElementById("terms-button").addEventListener("click", () => {
+    document.getElementById("terms-modal").style.display = "block"; // Mostrar el modal
+});
+
+document.getElementById("close-modal").addEventListener("click", () => {
+    document.getElementById("terms-modal").style.display = "none"; // Ocultar el modal
+});
+
+// Cerrar el modal al hacer clic fuera del contenido
+window.addEventListener("click", (event) => {
+    const modal = document.getElementById("terms-modal");
+    if (event.target === modal) {
+        modal.style.display = "none";
+    }
+});
+
+
+//Modal reg
+
+document.getElementById("reglas-button").addEventListener("click", () => {
+    document.getElementById("reglas-modal").style.display = "block"; // Mostrar el modal
+});
+
+document.getElementById("closeReglas-modal").addEventListener("click", () => {
+    document.getElementById("reglas-modal").style.display = "none"; // Ocultar el modal
+});
+
+// Cerrar el modal al hacer clic fuera del contenido
+window.addEventListener("click", (event) => {
+    const modal = document.getElementById("reglas-modal");
+    if (event.target === modal) {
+        modal.style.display = "none";
+    }
+});
+
+//Modal Fases
+
+document.getElementById("fases-button").addEventListener("click", () => {
+    document.getElementById("fases-modal").style.display = "block"; // Mostrar el modal
+});
+
+document.getElementById("closefases-modal").addEventListener("click", () => {
+    document.getElementById("fases-modal").style.display = "none"; // Ocultar el modal
+});
+
+// Cerrar el modal al hacer clic fuera del contenido
+window.addEventListener("click", (event) => {
+    const modal = document.getElementById("fases-modal");
+    if (event.target === modal) {
+        modal.style.display = "none";
+    }
+});
+
+
+
+
+
+
 // Llamar a la función para llenar la tabla
 testAccessData();
 
 
 
     </script>
+
+
 </body>
 </html>
