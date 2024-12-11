@@ -220,7 +220,7 @@ app.get("/test-access-data", verifyToken, async (req, res) => {
         const query = `
             SELECT NOMBRE + ' ' + APELLIDO AS NOMBRES, EMPLEADO, DPTO
             FROM [10.99.240.163].[HeonMidasoft].[dbo].[EMP]
-            WHERE NOMBRE LIKE @search or EMPLEADO LIKE @search AND ESTADO=''
+            WHERE (NOMBRE LIKE @search or EMPLEADO LIKE @search) AND ESTADO=''
         `;
 
         const result = await pool

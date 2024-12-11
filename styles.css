@@ -153,3 +153,25 @@ tr:nth-child(even) {
 tr:hover {
   background-color: #30363d;
 }
+
+button {
+  padding: 5px 10px;
+  background-color: #21262d;
+  border: 1px solid #30363d;
+  border-radius: 4px;
+  color: #c9d1d9;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #30363d;
+  color: #58a6ff;
+}
+
+button.add-button {
+  background-color: #39d353; /* Verde */
+}
+
+button.remove-button {
+  background-color: #f78166; /* Rojo */
+}

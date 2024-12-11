@@ -17,6 +17,19 @@
             <span id="title" style="color: #58a6ff;"></span> 
             (<span id="phone" style="color: #f78166;"></span>)
         </h3>
+
+        <div>
+            <label for="project-name" style="display: block; margin-bottom: 10px;">Nombre del Proyecto:</label>
+            <input
+                type="text"
+                id="project-name"
+                placeholder="Introduce el nombre del proyecto"
+                style="width: 90%; padding: 10px; margin-bottom: 20px;"
+            />
+        </div>
+
+
+        
         <div>
             <input
                 type="text"
@@ -25,15 +38,29 @@
                 style="width: 90%; padding: 10px; margin-bottom: 20px;"
             />
         </div>
+        <h3>Listado seleccionado</h3>
+<table id="selected-data-table" border="1" style="width: 90%; margin-top: 20px; text-align: center;">
+    <thead>
+        <tr>
+            <th>NOMBRE</th>
+            <th>DOCUMENTO</th>
+            <th>ÁREA</th>
+            <th>Acciones</th> <!-- Columna para eliminar -->
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Los datos seleccionados se insertarán dinámicamente aquí -->
+    </tbody>
+</table>
 
         <!-- Tabla para mostrar los datos -->
         <table id="access-data-table" border="1" style="width: 90%; margin-top: 20px; text-align: center;">
             <thead>
                 <tr>
-                    <th>NOMBRE </th>
+                    <th>NOMBRE</th>
                     <th>DOCUMENTO</th>
-                    <th>AREA</th>
-                   
+                    <th>ÁREA</th>
+                    <th>Acciones</th> <!-- Columna para el botón -->
                 </tr>
             </thead>
             <tbody>
@@ -119,14 +146,25 @@
                 tableBody.innerHTML = ""; // Limpiar el contenido previo
 
                 result.data.forEach((row) => {
-                    const tr = document.createElement("tr");
-                    tr.innerHTML = `
-                        <td>${row.NOMBRES}</td>
-                        <td>${row.EMPLEADO}</td>
-                        <td>${row.DPTO}</td>
-                    `;
-                    tableBody.appendChild(tr);
-                });
+                        const tr = document.createElement("tr");
+                        tr.innerHTML = `
+                            <td>${row.NOMBRES}</td>
+                            <td>${row.EMPLEADO}</td>
+                            <td>${row.DPTO}</td>
+                            <td><button class="add-button" data-nombre="${row.NOMBRES}" data-documento="${row.EMPLEADO}" data-area="${row.DPTO}">Agregar</button></td>
+                        `;
+                        tableBody.appendChild(tr);
+                    });
+
+                    // Añadir eventos al botón "Agregar"
+                    document.querySelectorAll(".add-button").forEach((button) => {
+                        button.addEventListener("click", (e) => {
+                            const nombre = e.target.getAttribute("data-nombre");
+                            const documento = e.target.getAttribute("data-documento");
+                            const area = e.target.getAttribute("data-area");
+                            addToGrid(nombre, documento, area);
+                        });
+                    });
             } else {
                 console.error("No se encontraron datos:", result.message);
                 const tableBody = document.querySelector("#access-data-table tbody");
@@ -139,6 +177,42 @@
         console.error("Error al conectarse al servidor:", error.message);
         alert("Error al conectarse al servidor: " + error.message);
     }
+});
+
+function addToGrid(nombre, documento, area) {
+    const tableBody = document.querySelector("#selected-data-table tbody");
+
+    // Verificar si el documento ya está en la lista
+    if (Array.from(tableBody.children).some(row => row.querySelector("td:nth-child(2)").textContent === documento)) {
+        alert("Este documento ya está en el listado.");
+        return;
+    }
+
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+        <td>${nombre}</td>
+        <td>${documento}</td>
+        <td>${area}</td>
+        <td><button class="remove-button">Eliminar</button></td>
+    `;
+    tableBody.appendChild(tr);
+
+    // Añadir evento al botón "Eliminar"
+    tr.querySelector(".remove-button").addEventListener("click", () => {
+        tr.remove();
+    });
+}
+
+// Captura el valor del proyecto
+const projectInput = document.getElementById("project-name");
+
+function getProjectName() {
+    return projectInput.value.trim(); // Obtener y limpiar el valor del input
+}
+
+// Agregar un evento para verificar el cambio
+projectInput.addEventListener("input", () => {
+    console.log("Nombre del proyecto actualizado:", getProjectName());
 });
 
 // Llamar a la función para llenar la tabla
