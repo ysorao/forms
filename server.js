@@ -212,16 +212,22 @@ app.post("/login", async (req, res) => {
 
 // Ruta para realizar la consulta y devolver los datos
 app.get("/test-access-data", verifyToken, async (req, res) => {
+    const search = req.query.search || ""; // Obtener el parámetro de búsqueda
+
     try {
-        // Conectar a la base de datos
         const pool = await connectToDatabase();
 
-        // Ejecutar la consulta
+        const query = `
+            SELECT NOMBRE + ' ' + APELLIDO AS NOMBRES, EMPLEADO, DPTO
+            FROM [10.99.240.163].[HeonMidasoft].[dbo].[EMP]
+            WHERE NOMBRE LIKE @search or EMPLEADO LIKE @search AND ESTADO=''
+        `;
+
         const result = await pool
             .request()
-            .query("select  NOMBRE+ ' ' + APELLIDO AS NOMBRES,EMPLEADO, DPTO FROM [10.99.240.163].[HeonMidasoft].[dbo].[EMP] WHERE NOMBRE LIKE '%OSCAR%' AND ESTADO=''");
+            .input("search", sql.VarChar, `%${search}%`) // Evitar inyección SQL
+            .query(query);
 
-        // Devolver los resultados
         res.json({
             status: true,
             data: result.recordset,
@@ -234,6 +240,7 @@ app.get("/test-access-data", verifyToken, async (req, res) => {
         });
     }
 });
+
 
 
 // Ruta protegida para "registro"

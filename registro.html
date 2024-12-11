@@ -17,7 +17,14 @@
             <span id="title" style="color: #58a6ff;"></span> 
             (<span id="phone" style="color: #f78166;"></span>)
         </h3>
-        
+        <div>
+            <input
+                type="text"
+                id="search-input"
+                placeholder="Buscar por nombre"
+                style="width: 90%; padding: 10px; margin-bottom: 20px;"
+            />
+        </div>
 
         <!-- Tabla para mostrar los datos -->
         <table id="access-data-table" border="1" style="width: 90%; margin-top: 20px; text-align: center;">
@@ -87,8 +94,10 @@
 
 
         // Función para probar la consulta y mostrar los datos en consola
-        async function testAccessData() {
+        document.getElementById("search-input").addEventListener("input", async (e) => {
+    const searchQuery = e.target.value.trim(); // Obtiene el texto ingresado en el campo
     const token = localStorage.getItem("token");
+
     if (!token) {
         alert("No tienes acceso. Por favor inicia sesión.");
         window.location.href = "index.html"; // Redirige al login
@@ -96,7 +105,7 @@
     }
 
     try {
-        const response = await fetch("http://localhost:3000/test-access-data", {
+        const response = await fetch(`http://localhost:3000/test-access-data?search=${searchQuery}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -105,8 +114,6 @@
         if (response.status === 200) {
             const result = await response.json();
             if (result.status) {
-                console.log("Datos obtenidos:", result.data);
-
                 // Llenar los datos en la tabla
                 const tableBody = document.querySelector("#access-data-table tbody");
                 tableBody.innerHTML = ""; // Limpiar el contenido previo
@@ -117,13 +124,13 @@
                         <td>${row.NOMBRES}</td>
                         <td>${row.EMPLEADO}</td>
                         <td>${row.DPTO}</td>
-                    
                     `;
                     tableBody.appendChild(tr);
                 });
             } else {
                 console.error("No se encontraron datos:", result.message);
-                alert("No se encontraron datos de acceso.");
+                const tableBody = document.querySelector("#access-data-table tbody");
+                tableBody.innerHTML = "<tr><td colspan='3'>No se encontraron resultados</td></tr>";
             }
         } else {
             console.error("Error en la solicitud:", response.status);
@@ -132,7 +139,7 @@
         console.error("Error al conectarse al servidor:", error.message);
         alert("Error al conectarse al servidor: " + error.message);
     }
-}
+});
 
 // Llamar a la función para llenar la tabla
 testAccessData();
