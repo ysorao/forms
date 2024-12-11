@@ -4,16 +4,17 @@ const cors = require("cors");
 const ldap = require("ldapjs");
 const jwt = require("jsonwebtoken");
 const sql = require("mssql");
+require("dotenv").config();
 
 // Clave secreta para firmar los tokens
-const SECRET_KEY = "miClaveSecreta12345";
+const SECRET_KEY = process.env.SECRET_KEY;
 
 // Configuración de la base de datos
 const dbConfig = {
-    user: "usr_ausentismos", // Usuario de la base de datos
-    password: "4Au$s3Ent1I$mo0oS", // Contraseña de la base de datos
-    server: "10.99.1.77", // Dirección del servidor SQL
-    database: "Aplicaciones", // Nombre de la base de datos
+    user: process.env.DB_USER, // Usuario de la base de datos
+    password: process.env.DB_PASSWORD, // Contraseña de la base de datos
+    server: process.env.DB_SERVER, // Dirección del servidor SQL
+    database: process.env.DB_DATABASE, // Nombre de la base de datos
     options: {
         encrypt: false, // Usa en Azure, si no estás en Azure puedes ignorar
         trustServerCertificate: false, // Solo si estás trabajando localmente
@@ -31,8 +32,8 @@ async function authenticateUser(username, password) {
             });
         }
 
-        const ldapServer = "ldap://10.99.24.101"; // Dirección del servidor LDAP
-        const baseDN = "OU=HEON,DC=heon,DC=com,DC=co"; // Ajusta al contenedor correcto
+        const ldapServer = process.env.LDAP_SERVER; // Dirección del servidor LDAP
+        const baseDN = process.env.LDAP_BASE_DN; // Ajusta al contenedor correcto
         const client = ldap.createClient({ url: ldapServer });
 
         const ldapUser = `${username}@heon.com.co`; // Formato del usuario
@@ -209,10 +210,8 @@ app.post("/login", async (req, res) => {
 });
 
 
-// Ruta para buscar datos en hncontrolacceso
-app.get("/control-acceso/:usuario", async (req, res) => {
-    const { usuario } = req.params; // Obtener el parámetro de la URL
-
+// Ruta para realizar la consulta y devolver los datos
+app.get("/test-access-data", verifyToken, async (req, res) => {
     try {
         // Conectar a la base de datos
         const pool = await connectToDatabase();
@@ -220,29 +219,22 @@ app.get("/control-acceso/:usuario", async (req, res) => {
         // Ejecutar la consulta
         const result = await pool
             .request()
-            .input("usuario", sql.VarChar, usuario) // Evitar inyección SQL
-            .query("SELECT * FROM hncontrolacceso WHERE usuario = @usuario");
+            .query("select  NOMBRE+ ' ' + APELLIDO AS NOMBRES,EMPLEADO, DPTO FROM [10.99.240.163].[HeonMidasoft].[dbo].[EMP] WHERE NOMBRE LIKE '%OSCAR%' AND ESTADO=''");
 
-        // Enviar la respuesta al cliente
-        if (result.recordset.length > 0) {
-            res.json({
-                status: true,
-                data: result.recordset, // Enviar los datos obtenidos
-            });
-        } else {
-            res.json({
-                status: false,
-                message: "No se encontraron resultados para el usuario especificado.",
-            });
-        }
+        // Devolver los resultados
+        res.json({
+            status: true,
+            data: result.recordset,
+        });
     } catch (error) {
         console.error("Error al ejecutar la consulta:", error);
         res.status(500).json({
             status: false,
-            message: "Error interno del servidor.",
+            message: "Error interno del servidor: " + error.message,
         });
     }
 });
+
 
 // Ruta protegida para "registro"
 app.get("/registro", verifyToken, (req, res) => {

@@ -20,6 +20,19 @@
         
 
         <!-- Tabla para mostrar los datos -->
+        <table id="access-data-table" border="1" style="width: 90%; margin-top: 20px; text-align: center;">
+            <thead>
+                <tr>
+                    <th>NOMBRE </th>
+                    <th>DOCUMENTO</th>
+                    <th>AREA</th>
+                   
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Los datos se insertarán dinámicamente aquí -->
+            </tbody>
+        </table>
         
 
         <!-- Botón de Logout -->
@@ -71,6 +84,61 @@
     
         // Verificar acceso al cargar la página
         verifyAccess();
+
+
+        // Función para probar la consulta y mostrar los datos en consola
+        async function testAccessData() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        alert("No tienes acceso. Por favor inicia sesión.");
+        window.location.href = "index.html"; // Redirige al login
+        return;
+    }
+
+    try {
+        const response = await fetch("http://localhost:3000/test-access-data", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        if (response.status === 200) {
+            const result = await response.json();
+            if (result.status) {
+                console.log("Datos obtenidos:", result.data);
+
+                // Llenar los datos en la tabla
+                const tableBody = document.querySelector("#access-data-table tbody");
+                tableBody.innerHTML = ""; // Limpiar el contenido previo
+
+                result.data.forEach((row) => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td>${row.NOMBRES}</td>
+                        <td>${row.EMPLEADO}</td>
+                        <td>${row.DPTO}</td>
+                    
+                    `;
+                    tableBody.appendChild(tr);
+                });
+            } else {
+                console.error("No se encontraron datos:", result.message);
+                alert("No se encontraron datos de acceso.");
+            }
+        } else {
+            console.error("Error en la solicitud:", response.status);
+        }
+    } catch (error) {
+        console.error("Error al conectarse al servidor:", error.message);
+        alert("Error al conectarse al servidor: " + error.message);
+    }
+}
+
+// Llamar a la función para llenar la tabla
+testAccessData();
+
+
+
     </script>
 </body>
 </html>

@@ -125,3 +125,31 @@ body {
     background-color: #444;
     cursor: not-allowed;
 }
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  background-color: #161b22;
+  color: #c9d1d9;
+}
+
+th, td {
+  border: 1px solid #30363d;
+  padding: 10px;
+}
+
+th {
+  background-color: #21262d;
+  color: #58a6ff;
+}
+
+tr:nth-child(even) {
+  background-color: #0d1117;
+}
+
+tr:hover {
+  background-color: #30363d;
+}

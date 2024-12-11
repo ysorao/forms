@@ -28,3 +28,4 @@ build/
 
 # Ignorar las carpetas generadas por paquetes de bundling
 coverage/
+config.json
